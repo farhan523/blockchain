@@ -22,6 +22,7 @@ export const TrackingProvider = ({children}) =>{
 
     const DappName = "Product Tracking Dapp"
     const [currentUser,setCurrentUser] = useState("");
+    const [cartP,setCart] = useState({productCount:0,products:{}});
 
     const createShipment = async (items) =>{
         console.log(items);
@@ -38,9 +39,7 @@ export const TrackingProvider = ({children}) =>{
                 new Date(pickupTime).getTime(),
                 distance,
                 ethers.utils.parseUnits(price,18),
-                {
-                    value : ethers.utils.parseUnits(price,18),
-                }
+                [22,33]
             )
 
             await createItem.wait();
@@ -109,12 +108,12 @@ export const TrackingProvider = ({children}) =>{
             const contract = fetchContract(signer);
 
             const transaction = await contract.completeShipment(
-                accounts[0],
                 receiver,
+                accounts[0],
                 index,
+                10,
                 {
-                    gasLimit:300000,
-
+                    value : ethers.utils.parseUnits("10",18),
                 }
             )
 
@@ -175,14 +174,14 @@ export const TrackingProvider = ({children}) =>{
             const shipment = await contract.startShipment(
                 accounts[0],
                 receiver,
-                index * 1   
+                index  
             )
 
             shipment.wait();
 
             console.log(shipment);
         }catch(error){
-            console.log("sorry no shipment")
+            console.log("error",error)
         }
     }  
     
@@ -238,7 +237,8 @@ export const TrackingProvider = ({children}) =>{
             getShipmentsCount,
             DappName,
             currentUser,
-
+            cartP,
+            setCart
         }}>
 
             {children}

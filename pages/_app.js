@@ -4,15 +4,16 @@ import "@/styles/globals.css";
 
 import { TrackingProvider } from "../Context/Tracking";
 import { NavBar, Footer } from "../Components/index";
+import CustomToastContainer from "../newComponents/CustomToastContainer";
 
 export default function App({ Component, pageProps }) {
     return (
         <>
             <TrackingProvider>
-                <NavBar />
+                <CustomToastContainer />
                 <Component {...pageProps} />
             </TrackingProvider>
-            <Footer />
+            
         </>
     );
 }

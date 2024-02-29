@@ -6,5 +6,5 @@
     "formatOnSave": true,
     "proseWrap": "never",
     "object-curly-newline": "0",
-    "printWidth":150 
+    "printWidth":250
 }

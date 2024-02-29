@@ -1,0 +1,118 @@
+
+
+.navbar{
+    height: 100px;
+    color: white;
+    background-color: #051d40;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.parentContainer{
+    width: 80%;
+    height: 100%;
+    /* background-color: white; */
+    border: 1px solid #051d40;
+    display: flex;
+    justify-content: space-between;
+}
+
+.leftChild{
+    height: 100%;
+    width: auto;
+    display: flex;
+    align-items: center;
+    /* color: black; */
+}
+
+.centerChild{
+    height: 100%;
+    width: auto;
+    color: white;
+    display: flex;
+    align-items: center;
+}
+
+.centerChild p{
+    margin: 0 10px 0 10px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+
+.centerChild p:hover{
+    border-color: white;
+}
+
+.rightChild{
+    height: 100%;
+    width: auto;
+    color: white;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    align-items: center;
+}
+
+.rightChild .walletAddress{
+    height: auto;
+    width: 100;
+    background-color: black;
+    padding: 5px 15px 5px 15px;
+    border-radius: 20px;
+    margin-right: 10px;
+}
+
+.rightChild  img{
+    margin-left: 10px;
+}
+
+.menuIcon{
+    display: none;
+
+}
+
+.sideMenu{
+    background: rgb(5,29,64);
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    /* referring directly to the animation's @keyframe declaration */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.sideMenu p{
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid white ;
+}
+
+
+@media only screen and (max-width: 1145px) {
+    .parentContainer{
+        width: 90%;
+    }
+}
+
+@media only screen and (max-width: 1020px) {
+    .centerChild{
+        display: none;
+    }
+
+    .rightChild{
+        display: none;
+    }
+
+    .menuIcon{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}

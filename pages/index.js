@@ -5,7 +5,7 @@ import { Table, Form, Services, Profile, CompleteShipment, GetShipment, StartShi
 import { TrackingContext } from "../Context/Tracking";
 
 const index = () => {
-    const { currentUser, createShipment, getAllShipment, completeShipment, getShipment, startShipment, getShipmentsCount } =
+    const { currentUser, createShipment, getAllShipment, completeShipment, getShipment, startShipment, getShipmentsCount,cart,setCart } =
         useContext(TrackingContext);
 
     // State variable

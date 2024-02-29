@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.AddShipmentButton:hover{
+    background-color: rgb(5,29,64) !important;
+    color: white !important;
+}
+
+.AddShipmentButton {
+    transition: background-color 0.3s ease , color 0.3s ease;
+}
+
+body{
+    background-color: aliceblue;
+}
+
