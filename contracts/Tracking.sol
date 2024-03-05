@@ -23,8 +23,15 @@ contract Tracking {
         bool isPaid;
     }
 
+    struct Product{
+        uint256 quantity;
+        uint256 productId;
+    }
+
     mapping(address => Shipment[]) public dilieverShipments;
     mapping(address => Shipment[]) public receiveShipments;
+    mapping(uint256 => address[]) public productHistory;
+    mapping (uint256 => Product) public  productIdMapping;
 
     uint256 public shipmenCount;
 
@@ -79,12 +86,17 @@ contract Tracking {
         shipmenCount = 0;
     }
 
-    function createShipment(address _receiver, uint256 _pickupTime, uint256 _distnce, uint256 _price,uint256[] memory products) public {
+    function createShipment(address _receiver, uint256 _pickupTime, uint256 _distnce, uint256 _price,uint256[] memory products,Product[] memory productData) public {
 
             Shipment memory shipment = Shipment(dilieverShipments[msg.sender].length,msg.sender, _receiver, _pickupTime, 0, _distnce, _price,products,ShipmentStatus.PENDING,false);
 
             dilieverShipments[msg.sender].push(shipment);
             receiveShipments[_receiver].push(shipment);
+
+            for(uint i=0; i < products.length; i++){ 
+                productHistory[products[i]].push(msg.sender);
+                productIdMapping[products[i]] = productData[i];
+            }  
 
             shipmenCount++;
 
@@ -107,8 +119,6 @@ contract Tracking {
 
         require(dilieverShipment.status != ShipmentStatus.CANCELLED, "Shipment is already cancelled");
         require(dilieverShipment.status != ShipmentStatus.DELIVERED, "Product is already dilievered cannot cancelled now");
-
-
 
         dilieverShipment.status = ShipmentStatus.CANCELLED;
         receiverShipment.status = ShipmentStatus.CANCELLED;
@@ -153,6 +163,10 @@ contract Tracking {
                     break;
                 }
         } 
+
+        for(uint i=0; i < shipment.products.length; i++){ 
+                productHistory[shipment.products[i]].push(_receiver);
+            } 
        
         require(msg.value  >= _price, "Payment amount must match the price.");
         require(shipment.receiver == msg.sender, "Invalid receiver.");
@@ -193,4 +207,12 @@ contract Tracking {
             return receiveShipments[msg.sender].length;
     }
 
+    function getProductHistory(uint256 productId)public  view  returns (address[] memory){
+        return productHistory[productId];
+    }
+
+    function getProductId(uint256 productId) public view returns  (uint256){
+        uint256  productOrigionalId = productIdMapping[productId].productId;
+        return  productOrigionalId;
+    }
 }

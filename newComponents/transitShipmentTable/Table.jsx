@@ -1,6 +1,6 @@
 import React from 'react'
 
-export default ({setCreateShipmentModel, allShipmentsData})=>{
+export default ({setCreateShipmentModel,transitShipmentsData, allShipmentsData})=>{
     const convetTime = (time)=>{
         const newTime = new Date(time);
         const dateTime = new Intl.DateTimeFormat("en-US",{
@@ -64,6 +64,41 @@ export default ({setCreateShipmentModel, allShipmentsData})=>{
               {
                 allShipmentsData?.map((shipment,idx)=>(
                     <tr key={idx}>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          {shipment.sender.slice(0,15)}...
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          {shipment.receiver.slice(0,15)}...
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          {convetTime(shipment.pickupTime)}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          {shipment.distance} km
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          {shipment.price}
+                      </td>
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          {shipment.deliveryTime}
+                      </td>
+                      <td className='px-5 py-4 whitespace-nowrap'>
+                          {shipment.isPaid ? 'Completed' : "Not Complete"}
+                      </td>
+                      
+                      <td className='px-6 py-4 whitespace-nowrap'>
+                          <div style={{display: "flex"}}>
+                          <h2 style={{opacity:0.5, backgroundColor : "black", color:"lightgreen", padding : 7, cursor : "pointer" ,marginRight : 5 }}>Start Shipment</h2>
+                          <h2 style={{backgroundColor : "black", color:"red", padding : 7, cursor : "pointer" ,marginRight : 5 }}>Cancel Shipment</h2>
+                          <h2 style={{backgroundColor : "black", color:"yellow", padding : 7, cursor : "pointer" , }}>Details</h2>
+                          </div>
+                      </td>
+                    </tr>
+                ))
+              }
+              {
+                transitShipmentsData?.map((shipment,idx)=>(
+                    <tr key={shipment.id}>
                       <td className='px-6 py-4 whitespace-nowrap'>
                           {shipment.sender.slice(0,15)}...
                       </td>

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext,useState,useEffect,useLayoutEffect } from "react";
 import Navbar from "../newComponents/Navbar/Navbar";
 import Link from 'next/link';
 import { Roboto } from "next/font/google";
@@ -6,6 +6,8 @@ import { Roboto } from "next/font/google";
 import NewShipmentTable from "../newComponents/newShipmentTable/Table"
 import TransitShipmentTable from "../newComponents/transitShipmentTable/Table"
 import CompleteShipmentTable from "../newComponents/completeShipment/Table"
+
+import { Form } from "@/Components";
 
 import {  toast } from "react-toastify";
 import { TrackingContext } from "@/Context/Tracking";
@@ -88,11 +90,33 @@ const shipmentData = [{
 
 
 function home() {
-    const { cartP } = useContext(TrackingContext);
+    const { cartP,createShipment,getAllPendingShipment,getAllTransitShipment } = useContext(TrackingContext);
+    const [createShipmentModel, setCreateShipmentModel] = useState(true);
+
+    // data state variable
+    const [pendingShipmentsData, setAllPendingShipmentData] = useState([]);
+    const [transitShipmentsData, setAllTransitShipmentData] = useState([]);
+
+
+    useEffect(() => {
+        const pendingShipmentData = getAllPendingShipment();
+        const transitShipments = getAllTransitShipment();
+        
+        return async () => {
+            const pendingShipments = await pendingShipmentData;
+            const transitShipment = await transitShipments;
+            console.log("alldata",pendingShipments)
+            setAllPendingShipmentData(pendingShipments);
+            setAllTransitShipmentData(transitShipment);
+        };
+    }, []);
+    
 
     function handleNewShipment() {
         if (!cartP.productCount) {
             return toast.info("Cart is empty add some products")
+        }else{
+            setCreateShipmentModel(true);
         }
     }
 
@@ -100,10 +124,11 @@ function home() {
         <>
             <Navbar currentPage={"Home"}/>
             <AddShipmentButton clickHandler={handleNewShipment} style={{ marginTop: 10, marginBottom: 5, headingWidth: "fit-content" }} heading={"ADD NEW SHIPMENT"} />
+            <Form createShipmentModel={createShipmentModel} createShipment={createShipment} setCreateShipmentModel={setCreateShipmentModel} />
             <SectionHead style={{marginTop : 40, marginBottom : 0,width : "auto" }} heading={"Pending Shipments"} details={"Shipment that are not yet started are shown here."}/>
-            <NewShipmentTable allShipmentsData={shipmentData}/>
+            <NewShipmentTable setAllTransitShipmentData={setAllTransitShipmentData} allShipmentsData={shipmentData} setAllPendingShipmentData={setAllPendingShipmentData} pendingShipments={pendingShipmentsData}/>
             <SectionHead style={{marginTop : 40, marginBottom : 0,width : "auto" }} heading={"Shipments In Transit"} details={"Shipment that are not yet delivered are shown here."}/>
-            <TransitShipmentTable allShipmentsData={shipmentData}/>
+            <TransitShipmentTable transitShipmentsData={transitShipmentsData} allShipmentsData={shipmentData}/>
             <SectionHead style={{marginTop : 40, marginBottom : 0,width : "auto" }} heading={"Completed Shipments"} details={"Shipment that are successfully delivered are shown here."}/>
             <CompleteShipmentTable allShipmentsData={shipmentData}/>
         </>

@@ -1,19 +1,43 @@
-import React,{useState} from 'react'
+import React,{useState,useContext} from 'react'
+import { useRouter } from 'next/router';
+// ES6 Modules
+import { Random } from "random-js";
+
+import { TrackingContext } from "@/Context/Tracking";
+
+import {  toast } from "react-toastify";
+
+
 
 export default ({setCreateShipmentModel,createShipmentModel,createShipment}) =>{
+  const { cartP,setCart } = useContext(TrackingContext);
+  const router = useRouter();
+
+
   const [shipment,setShipment] = useState({
     receiver:"",
     pickupTime:"",
     distance:"",
     price:"",
-
   })
 
   const createItem = async () =>{
+    let productRandomId = [];
+    let productData = [];
+
+    for(let key in cartP.products){
+        productData.push({ quantity: cartP.products[key].quantity,productId:key});
+        productRandomId.push(Math.abs(new Random().int32()));
+    }
     try{
-        await createShipment(shipment);
+        await createShipment(shipment,productRandomId,productData);
+        setCart({productCount:0,products:{}})
+        setCreateShipmentModel(false)
+        router.reload();
     }catch(error){
-      console.log("something went wrong while creating shipment");
+      setCreateShipmentModel(false)
+      console.log("something went wrong while creating shipment",error.message);
+      toast.error(error.code + error.message)
     }
   }
   return createShipmentModel ? (
@@ -32,10 +56,10 @@ export default ({setCreateShipmentModel,createShipmentModel,createShipment}) =>{
           </div>
           <div className='max-w-sm mx-auto py-3 space-y-3 text-center'>
             <h4 className='text-lg font-medium text-gray-800'>
-              Track Product, Create Shipment
+              Add Shipment
             </h4>
             <p className='text-[15px] text-gray-600'>
-                Ut enim ad minim veniam, quis nosturd exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                All the Products in the cart will be added to this shipment.
             </p>
             <form onSubmit={(e) => {e.preventDefault()}}>
               <div className='relative mt-3 '>
@@ -48,7 +72,7 @@ export default ({setCreateShipmentModel,createShipmentModel,createShipment}) =>{
                 } />
               </div>
               <div className='relative mt-3 '>
-                <input type='date' placeholder='pickupTime' className='w-full pl-5 pr-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg' onChange={(e) => {
+                <input type='date' placeholder='pickupTime'  className='w-full pl-5 pr-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg' onChange={(e) => {
                   setShipment({
                   ...shipment,
                   pickupTime :e.target.value 
@@ -57,7 +81,7 @@ export default ({setCreateShipmentModel,createShipmentModel,createShipment}) =>{
                 } />
               </div>
               <div className='relative mt-3 '>
-                <input type='text' placeholder='distance' className='w-full pl-5 pr-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg' onChange={(e) => {
+                <input type='text' placeholder='distance in km' className='w-full pl-5 pr-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg' onChange={(e) => {
                   setShipment({
                   ...shipment,
                   distance:e.target.value 
@@ -66,7 +90,7 @@ export default ({setCreateShipmentModel,createShipmentModel,createShipment}) =>{
                 } />
               </div>
               <div className='relative mt-3 '>
-                <input type='text' placeholder='price' className='w-full pl-5 pr-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg' onChange={(e) => {
+                <input type='text' placeholder='charges for shipment in ethereum' className='w-full pl-5 pr-3 py-2 text-gray-500 bg-transparent outline-none border focus:border-indigo-600 shadow-sm rounded-lg' onChange={(e) => {
                   setShipment({
                   ...shipment,
                   price:e.target.value 
@@ -74,7 +98,7 @@ export default ({setCreateShipmentModel,createShipmentModel,createShipment}) =>{
                 }
                 } />
               </div>
-              <button onClick={()=>{createItem()}} className='block w-full mt-3 px-4 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg ring-offset-2 ring-indigo-600 focus:ring-2  '>
+              <button onClick={()=>{createItem()}} className='block w-full mt-3 px-4 py-3 font-medium text-center text-white bg-indigo-600 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg ring-offset-2 ring-indigo-600 focus:ring-2  '>
                   Create Shipment
               </button>
             </form>

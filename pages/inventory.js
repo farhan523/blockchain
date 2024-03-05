@@ -56,11 +56,12 @@ function Inventory() {
       const handleAddToCart = (productId, quantity)=>{
         console.log(quantity)
         if(cartP.products[productId] !== undefined){
+            console.log(cartP)
             console.log("ss")
             setCart((prevQuantities)=>({
                 
                     ...prevQuantities,
-                  
+                    productCount: prevQuantities.productCount  - prevQuantities.products[productId].quantity + quantity,
                     products : {
                         ...prevQuantities.products,
                         [productId]:{
@@ -70,11 +71,12 @@ function Inventory() {
                 
             }))
         }else{
-            console.log("cc")
+            console.log(cartP)
+
             setCart((prevQuantities)=>{
                 return {
                     ...prevQuantities,
-                    productCount: prevQuantities.productCount + 1,
+                    productCount: prevQuantities.productCount + quantity,
                     products:{
                         ...prevQuantities.products,
                         [productId]:{
