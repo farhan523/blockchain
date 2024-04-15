@@ -94,7 +94,7 @@ contract Tracking {
             receiveShipments[_receiver].push(shipment);
 
             for(uint i=0; i < products.length; i++){ 
-                productHistory[products[i]].push(msg.sender);
+                productHistory[productData[i].productId].push(msg.sender);
                 productIdMapping[products[i]] = productData[i];
             }  
 
@@ -211,8 +211,8 @@ contract Tracking {
         return productHistory[productId];
     }
 
-    function getProductId(uint256 productId) public view returns  (uint256){
-        uint256  productOrigionalId = productIdMapping[productId].productId;
-        return  productOrigionalId;
+    function getProductData(uint256 productId) public view returns  (Product memory){
+        Product memory  productOrigional = productIdMapping[productId];
+        return  productOrigional;
     }
 }

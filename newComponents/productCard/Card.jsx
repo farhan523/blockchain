@@ -14,7 +14,7 @@ function handleAddToCartNotification() {
 }
 
 
-function Card({handleAddToCart, quantity,id,handleQuantityChange,name,image,description,price,itemsRemaining}) {
+function Card({userProductId,handleAddToCart,index, quantity,id,handleQuantityChange,name,image,description,price,itemsRemaining}) {
   return (
     <div key={id} className={styles.card}>
 
@@ -27,11 +27,11 @@ function Card({handleAddToCart, quantity,id,handleQuantityChange,name,image,desc
         <div className={styles.quant}>
             <p>Quantity</p>
             <div className={styles.iconDiv}>
-                <div className={styles.quantIcon} onClick={()=>{handleQuantityChange(id, quantity - 1)}}>
+                <div className={styles.quantIcon} onClick={()=>{handleQuantityChange(id, quantity - 1,index)}}>
                     -
                 </div>
                 <p>{quantity}</p>
-                <div className={styles.quantIcon} onClick={()=>{handleQuantityChange(id, quantity + 1)}}>
+                <div className={styles.quantIcon} onClick={()=>{handleQuantityChange(id, quantity + 1,index)}}>
                     +
                 </div>
             </div>
@@ -40,13 +40,13 @@ function Card({handleAddToCart, quantity,id,handleQuantityChange,name,image,desc
             <p>Items Remaining In Store :</p>
             <div className={styles.iconDiv}>
                 
-                <p>{itemsRemaining}</p>
+                {itemsRemaining == "0" ? <p style={{color:"red"}}>OUT OF STOCK</p> : itemsRemaining}
                
             </div>
         </div>
-        <div className={styles.btn} onClick={()=>{handleAddToCart(id,quantity);handleAddToCartNotification()}}>
-            <h1>Add To Cart</h1>
-        </div>
+        <button disabled={itemsRemaining == "0" ? true : false}   className={styles.btn} onClick={()=>{handleAddToCart(id,quantity,index,userProductId);handleAddToCartNotification()}}>
+            Add To Cart
+        </button>
         
     </div>
   )

@@ -7,10 +7,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;    
 }
 
 .parentContainer{
-    width: 80%;
+    width: 82%;
     height: 100%;
     /* background-color: white; */
     border: 1px solid #051d40;
@@ -95,13 +96,20 @@
 }
 
 
-@media only screen and (max-width: 1145px) {
+@media only screen and (max-width: 1300px) {
     .parentContainer{
         width: 90%;
     }
 }
 
-@media only screen and (max-width: 1020px) {
+
+@media only screen and (max-width: 1145px) {
+    .parentContainer{
+        width: 80%;
+    }
+}
+
+@media only screen and (max-width: 1180px) {
     .centerChild{
         display: none;
     }

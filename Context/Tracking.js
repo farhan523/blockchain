@@ -23,6 +23,7 @@ export const TrackingProvider = ({children}) =>{
     const DappName = "Product Tracking Dapp"
     const [currentUser,setCurrentUser] = useState("");
     const [cartP,setCart] = useState({productCount:0,products:{}});
+    const [products,setProducts] = useState([]);
 
     const createShipment = async (items,products,productData) =>{
         console.log(items);
@@ -47,6 +48,27 @@ export const TrackingProvider = ({children}) =>{
             console.log(createItem);
         }catch(error){
             console.log("error",error) 
+            throw (error)
+        }
+    }
+
+    const cancelShipment = async (sender,receiver,shipmentId) =>{
+       
+        try{
+            const web3modal  =  new Web3Modal();
+            const connection = await web3modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer);
+            const cancelItem = await contract.cancelShipment(
+                sender,
+                receiver,
+                shipmentId
+            )
+
+            await cancelItem.wait();
+        }catch(error){
+            console.log("error while cancelling shipment",error) 
             throw (error)
         }
     }
@@ -97,11 +119,12 @@ export const TrackingProvider = ({children}) =>{
                         distance:shipment.distance.toNumber(),
                         isPaid: shipment.isPaid,
                         status:shipment.status,
-                        products:shipment.products
+                        products:shipment.products,
+                        productsData:shipment.productData
                     })
                 }
             })
-
+            console.log(allShipments)
             return allShipments
         }catch(error){
             console.log("error in getting pending shipment",error)
@@ -131,6 +154,102 @@ export const TrackingProvider = ({children}) =>{
                         distance:shipment.distance.toNumber(),
                         isPaid: shipment.isPaid,
                         status:shipment.status,
+                        products:shipment.products,
+                        productsData:shipment.productData
+                    })
+                }
+            })
+
+            return allShipments
+        }catch(error){
+            console.log("error in getting pending shipment",error)
+        }
+    };
+
+    const getAllCancelShipment = async () =>{
+        try{
+            const web3modal  =  new Web3Modal();
+            const connection = await web3modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer);
+
+            const shipments = await contract.getAllDilieverTransactions();
+            const allShipments = [];
+            console.log(shipments)
+            shipments.forEach((shipment)=>{
+                if(shipment.status == 1){
+                    allShipments.push({
+                        id:shipment.id,
+                        sender:shipment.sender,
+                        receiver:shipment.receiver,
+                        price: ethers.utils.formatEther(shipment.price.toString()),
+                        pickupTime:shipment.pickupTime.toNumber(),
+                        deliveryTime:shipment.deliveryTime.toNumber(),
+                        distance:shipment.distance.toNumber(),
+                        isPaid: shipment.isPaid,
+                        status:shipment.status,
+                        products:shipment.products,
+                        productsData:shipment.productData
+                    })
+                }
+            })
+
+            return allShipments
+        }catch(error){
+            console.log("error in getting pending shipment",error)
+        }
+    };
+
+    const getProductData = async (shipments) =>{
+        try{
+            const web3modal  =  new Web3Modal();
+            const connection = await web3modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer);
+            let shipmentData = [];
+            console.log(shipments);
+            for(let i=0;i<shipments.products.length;i++){
+                console.log(shipments.products[i]._hex)
+                let data = await contract.getProductData(shipments.products[i]._hex);
+                console.log(data)
+                shipmentData.push(data);
+            } 
+            const decimalNumber = parseInt(shipmentData[0][1]._hex, 16);
+            console.log(shipmentData[0].productId)
+            console.log(decimalNumber)
+            console.log(shipmentData);
+            return shipmentData;
+
+        }catch(err){
+            console.log("error in getting shipment data",err)
+        }
+    }
+
+    const getAllReceiveShipment = async () =>{
+        try{
+            const web3modal  =  new Web3Modal();
+            const connection = await web3modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer);
+
+            const shipments = await contract.getAllReceiveTransactions();
+            const allShipments = [];
+            console.log(shipments)
+            shipments.forEach((shipment)=>{
+                if(shipment.status == 2){
+                    allShipments.push({
+                        id:shipment.id,
+                        sender:shipment.sender,
+                        receiver:shipment.receiver,
+                        price: ethers.utils.formatEther(shipment.price.toString()),
+                        pickupTime:shipment.pickupTime.toNumber(),
+                        deliveryTime:shipment.deliveryTime.toNumber(),
+                        distance:shipment.distance.toNumber(),
+                        isPaid: shipment.isPaid,
+                        status:shipment.status,
                         products:shipment.products
                     })
                 }
@@ -141,6 +260,77 @@ export const TrackingProvider = ({children}) =>{
             console.log("error in getting pending shipment",error)
         }
     };
+
+    const getAllReceiveShipmentCompleted = async () =>{
+        try{
+            
+            const web3modal  =  new Web3Modal();
+            const connection = await web3modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer);
+
+            const shipments = await contract.getAllReceiveTransactions();
+            const allShipments = [];
+            console.log(shipments)
+            shipments.forEach((shipment)=>{
+                if(shipment.status == 3){
+                    allShipments.push({
+                        id:shipment.id,
+                        sender:shipment.sender,
+                        receiver:shipment.receiver,
+                        price: ethers.utils.formatEther(shipment.price.toString()),
+                        pickupTime:shipment.pickupTime.toNumber(),
+                        deliveryTime:shipment.deliveryTime.toNumber(),
+                        distance:shipment.distance.toNumber(),
+                        isPaid: shipment.isPaid,
+                        status:shipment.status,
+                        products:shipment.products
+                    })
+                }
+            })
+
+            return allShipments
+        }catch(error){
+            console.log("error in getting pending shipment",error)
+        }
+    };
+
+
+    const getAllCompleteShipment = async () =>{
+        try{
+            const web3modal  =  new Web3Modal();
+            const connection = await web3modal.connect();
+            const provider = new ethers.providers.Web3Provider(connection);
+            const signer = provider.getSigner();
+            const contract = fetchContract(signer);
+
+            const shipments = await contract.getAllDilieverTransactions();
+            const allShipments = [];
+            console.log(shipments)
+            shipments.forEach((shipment)=>{
+                if(shipment.status == 3){
+                    allShipments.push({
+                        id:shipment.id,
+                        sender:shipment.sender,
+                        receiver:shipment.receiver,
+                        price: ethers.utils.formatEther(shipment.price.toString()),
+                        pickupTime:shipment.pickupTime.toNumber(),
+                        deliveryTime:shipment.deliveryTime.toNumber(),
+                        distance:shipment.distance.toNumber(),
+                        isPaid: shipment.isPaid,
+                        status:shipment.status,
+                        products:shipment.products
+                    })
+                }
+            })
+
+            return allShipments
+        }catch(error){
+            console.log("error in getting pending shipment",error)
+        }
+    };
+    
 
     const getShipmentsCount = async () =>{
         try{
@@ -158,10 +348,8 @@ export const TrackingProvider = ({children}) =>{
         }
     };
 
-    const completeShipment = async (completeShip) =>{
-        console.log(completeShip);
-
-        const {receiver,index} = completeShip;
+    const completeShipment = async (sender,receiver,shipmentId,price) =>{
+        
 
         try{
             if(!window.ethereum) return "install MetaMask";
@@ -178,18 +366,19 @@ export const TrackingProvider = ({children}) =>{
             const contract = fetchContract(signer);
 
             const transaction = await contract.completeShipment(
+                sender,
                 receiver,
-                accounts[0],
-                index,
-                10,
+                shipmentId,
+                parseInt(price),
                 {
-                    value : ethers.utils.parseUnits("10",18),
+                    value : ethers.utils.parseUnits(price,18),
                 }
             )
 
             transaction.wait();
             console.log(transaction);
         }catch(error){
+            throw(error);
             console.log("error while completing shipment",error);
         }
     }
@@ -292,8 +481,8 @@ export const TrackingProvider = ({children}) =>{
     }
 
     useEffect(()=>{
-        connectWallet()
-        checkIfWalletConnected()
+        // connectWallet()
+        // checkIfWalletConnected()
     },[])
 
     return (
@@ -307,10 +496,18 @@ export const TrackingProvider = ({children}) =>{
             getShipmentsCount,
             getAllPendingShipment,
             getAllTransitShipment,
+            getAllCancelShipment,
+            cancelShipment,
+            getAllCompleteShipment,
+            getAllReceiveShipment,
+            getAllReceiveShipmentCompleted,
+            getProductData,
             DappName,
             currentUser,
             cartP,
-            setCart
+            setCart,
+            products,
+            setProducts
         }}>
 
             {children}

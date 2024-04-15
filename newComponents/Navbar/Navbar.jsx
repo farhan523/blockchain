@@ -3,9 +3,10 @@ import styles from "./navbar.module.css";
 import logo from "../../public/images/logo.png";
 import cart from "../../public/images/shopping-cart.png";
 import Image from "next/image";
-import close from "../../public/images/cross.png"
+import close from "../../public/images/cross.png";
 import menu from "../../public/images/menu.png";
-import Link from 'next/link';
+import Link from "next/link";
+import { toast } from "react-toastify";
 
 import "animate.css";
 
@@ -22,7 +23,7 @@ let pages = [
     },
     {
         name: "AddInventory",
-        link: "#"
+        link: "/addInventory"
     },
     {
         name: "Inventory",
@@ -30,22 +31,25 @@ let pages = [
     },
     {
         name: "Profile",
-        link: "#"
+        link: "/profile"
     },
     {
         name: "Analytics",
         link: "#"
+    },
+    {
+        name: "OrderedShipments",
+        link: "/orderShipment"
     }
 ];
 
-function Navbar({currentPage}) {
-    const { currentUser, connectWallet,cartP } = useContext(TrackingContext);
+function Navbar({ currentPage }) {
+    const { currentUser, connectWallet, cartP } = useContext(TrackingContext);
     const [menuOpen, setMenuOpen] = useState(false);
-    
+
     return (
         <div className={styles.navbar}>
             <div className={styles.parentContainer}>
-
                 {/* logo */}
                 <div className={styles.leftChild}>
                     <Image src={logo} style={{ height: "80%", width: "auto" }} alt="logo" />
@@ -58,20 +62,27 @@ function Navbar({currentPage}) {
                 <div className={styles.centerChild}>
                     {pages.map((page) => {
                         return (
-                            <p key={page.link} className={roboto.className} style={{borderColor : currentPage == page.name ? "white" : "transparent"}}>
+                            <p key={page.link} className={roboto.className} style={{ borderColor: currentPage == page.name ? "white" : "transparent" }}>
                                 <Link href={page.link}>{page.name}</Link>
                             </p>
                         );
                     })}
                 </div>
-                
+
                 {/* wallet address and cart */}
                 <div className={styles.rightChild}>
                     <div className={styles.walletAddress}>
                         {currentUser ? (
                             <p className={roboto.className}>{currentUser.slice(0, 25).slice(0, 25)}...</p>
                         ) : (
-                            <p onClick={() => connectWallet()} style={{ cursor: "pointer" }}>
+                            <p
+                                onClick={async () => {
+                                    let res = await connectWallet();
+                                    console.log("res", res);
+                                    if (res) toast.info("install metamask extension to connect wallet");
+                                }}
+                                style={{ cursor: "pointer" }}
+                            >
                                 {" "}
                                 Connect Wallet
                             </p>
@@ -81,17 +92,23 @@ function Navbar({currentPage}) {
                     <div style={{ height: "100%", width: "auto", display: "flex", alignItems: "center", position: "relative" }}>
                         <Image src={cart} style={{ height: "30%", width: "auto" }} alt="logo" />
                         <div>
-                            <span style={{ position: "absolute", top: "32%", right: "-9px", backgroundColor: "red", borderRadius: "50%", width: "20px", height: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}> {cartP.productCount} </span>
+                            <span style={{ position: "absolute", top: "32%", right: "-9px", backgroundColor: "red", borderRadius: "50%", width: "20px", height: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                {" "}
+                                {cartP.productCount}{" "}
+                            </span>
                         </div>
                     </div>
                 </div>
-                
+
                 {/* menu icon */}
                 <div className={styles.menuIcon} onClick={() => setMenuOpen(true)}>
-                    <div style={{ height: "100%", width: "auto", display: "flex", alignItems: "center", position: "relative",marginRight:"20px" }}>
+                    <div style={{ height: "100%", width: "auto", display: "flex", alignItems: "center", position: "relative", marginRight: "20px" }}>
                         <Image src={cart} style={{ height: "30%", width: "auto" }} alt="logo" />
                         <div>
-                            <span style={{ position: "absolute", top: "32%", right: "-9px", backgroundColor: "red", borderRadius: "50%", width: "20px", height: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}> {cartP.productCount} </span>
+                            <span style={{ position: "absolute", top: "32%", right: "-9px", backgroundColor: "red", borderRadius: "50%", width: "20px", height: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
+                                {" "}
+                                {cartP.productCount}{" "}
+                            </span>
                         </div>
                     </div>
                     <Image src={menu} width={50} height={50} />
@@ -106,10 +123,15 @@ function Navbar({currentPage}) {
                     animationDuration: "1s"
                 }}
                 className={styles.sideMenu}
-            >   
-              <div onClick={()=>{setMenuOpen(false)}} style={{width:"100%" , top: 0, position: "absolute", display: "flex", justifyContent:"flex-end", padding:20, cursor:"pointer"}}>
-                <Image src={close} width={50} height={50} />
-              </div>
+            >
+                <div
+                    onClick={() => {
+                        setMenuOpen(false);
+                    }}
+                    style={{ width: "100%", top: 0, position: "absolute", display: "flex", justifyContent: "flex-end", padding: 20, cursor: "pointer" }}
+                >
+                    <Image src={close} width={50} height={50} />
+                </div>
                 <div className={styles.menuItem}>
                     {pages.map((page) => {
                         return (
@@ -121,7 +143,14 @@ function Navbar({currentPage}) {
                     {currentUser ? (
                         <p className={roboto.className}>{currentUser.slice(0, 25).slice(0, 25)}...</p>
                     ) : (
-                        <p onClick={() => connectWallet()} style={{ cursor: "pointer" }}>
+                        <p
+                            onClick={async () => {
+                                let res = await connectWallet();
+                                console.log("res", res);
+                                if (res) toast.info("install metamask extension to connect wallet");
+                            }}
+                            style={{ cursor: "pointer" }}
+                        >
                             {" "}
                             Connect Wallet
                         </p>

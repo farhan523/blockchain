@@ -19,5 +19,26 @@
 
 body{
     background-color: aliceblue;
+    overflow-x: hidden;
 }
 
+.shipmentDetails{
+    position: absolute;
+    height: 100vh;
+    min-width: 300px;
+    max-width: 100vw;
+    background-color: aquamarine;
+    right: 0;
+    animation: fadeInRight;
+    animation-duration: 3s;
+    position: fixed;
+    z-index: 1;
+    background-color: #f0f8ff;
+    overflow-y: auto;
+}
+
+.shipmentItems{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
