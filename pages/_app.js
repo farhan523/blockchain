@@ -25,7 +25,7 @@ export default function App({ Component, pageProps }) {
             <TrackingProvider>
             
                 <CustomToastContainer />
-                <Component {...pageProps} />
+                <Component suppressHydrationWarning={true} {...pageProps} />
             </TrackingProvider>
             
         </>

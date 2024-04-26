@@ -96,7 +96,7 @@ const shipmentData = [{
 
 
 function home() {
-    const {connectWallet,getProductData, cartP,createShipment,getAllPendingShipment,getAllTransitShipment,getAllCancelShipment, getAllCompleteShipment,currentUser } = useContext(TrackingContext);
+    const {connectWallet,getProductData,getProductHistory, cartP,createShipment,getAllPendingShipment,getAllTransitShipment,getAllCancelShipment, getAllCompleteShipment,currentUser } = useContext(TrackingContext);
     const [createShipmentModel, setCreateShipmentModel] = useState(false);
 
     // data state variable
@@ -119,15 +119,16 @@ function home() {
             setLogIn(true);
     }
 
-    // useLayoutEffect(()=>{
-    //     checkIfUserLogin();
-    // },[])
+    useLayoutEffect(()=>{
+        checkIfUserLogin();
+    },[])
 
     async function checkWallet(){
         let res = await connectWallet();
         return res;
     }
 
+    // getProductHistory(23);
 
     useEffect(() => {
 
@@ -138,13 +139,15 @@ function home() {
         const transitShipments = getAllTransitShipment();
         const cancelShipments = getAllCancelShipment();
         const completeShipments = getAllCompleteShipment();
+       
         
         return async () => {
           
                 res = await res;
                 if(res)
                     return  toast.info("install metamask to show data");
-                
+            
+                  
             
             const pendingShipments = await pendingShipmentData;
             const transitShipment = await transitShipments;

@@ -54,7 +54,7 @@ function orderShipment() {
   return (
     <>
         <ShipmentDetails setOpenDetailsPanel={setOpenDetailsPanel} openDetailsPanel={openDetailsPanel} shipmentDetails={shipmentDetails} />
-        <Navbar currentPage={"OrderedShipments"}/>
+        <Navbar currentPage={"OrderedShipment"}/>
         <SectionHead style={{marginTop : 40, marginBottom : 0,width : "auto" }} heading={"Shipments in Transits"} details={"All the Shipments deliver to you by others will be shown here, you can complete them here."}/>
         <ReceiveShipmentTable setOpenDetailsPanel={setOpenDetailsPanel} setShipmentDetails={setShipmentDetails} getProductData={getProductData} receiveShipmentsData={receiveShipmentsData} setReceivesShipmentData={setReceivesShipmentData} setAllCompleteShipmentsData={setAllCompleteShipmentsData} />
         <SectionHead style={{marginTop : 40, marginBottom : 0,width : "auto" }} heading={"Received Shipments"} details={"All the Shipments successfully received by you will be shown here"}/>

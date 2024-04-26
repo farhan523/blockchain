@@ -31,16 +31,25 @@ const data = [{
 
 const roboto = Roboto({ weight: "700", subsets: ["latin"] });
 
-function Profile() {
+function Profile({statistics}) {
+    console.log(Object.keys(statistics))
+
+    let data = Object.keys(statistics).map((category,index) => {
+        console.log(category,statistics[category].count , statistics["Total Shipments"] )
+        return <DataCard key={index} heading={category} percent={statistics["Total Shipments"]  == 0 ? 0 : statistics[category].count / (statistics["Total Shipments"] ) * 100  }/>
+    })
+    data.length = 4;
+    
     return (
         <>
-            <div className={styles.header}>Profile</div>
+            <div className={styles.header}></div>
             <div className={styles.profile}></div>
             <div className={styles.credentials}>
                 <h1 className={`${roboto.className} ${styles.personName}`}>Emma Smith</h1>
             </div>
             <div className={styles.datadiv}>
-                {data.map((item,index)=> <DataCard key={index} heading={item.heading} percent={item.percent}/>)}
+                {data}
+                {/* {data.map((item,index)=> <DataCard key={index} heading={item.heading} percent={item.percent}/>)} */}
             </div>
         </>
     );

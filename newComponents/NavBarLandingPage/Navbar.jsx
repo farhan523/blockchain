@@ -18,29 +18,18 @@ const roboto = Roboto({ weight: "400", subsets: ["latin"] });
 
 let pages = [
     {
-        name: "Home",
-        link: "/home"
+        name: "Login",
+        link: "/Login"
     },
     {
-        name: "AddInventory",
-        link: "/addInventory"
+        name: "SignUp",
+        link: "/Signup"
     },
     {
-        name: "Inventory",
-        link: "/inventory"
+        name: "ProductHistory",
+        link: "#"
     },
-    {
-        name: "Profile",
-        link: "/Profile"
-    },
-    {
-        name: "MarketOverview",
-        link: "/MarketOverview"
-    },
-    {
-        name: "OrderedShipments",
-        link: "/orderShipment"
-    }
+  
 ];
 
 function Navbar({ currentPage }) {
@@ -77,9 +66,7 @@ function Navbar({ currentPage }) {
                         ) : (
                             <p
                                 onClick={async () => {
-                                    let res = await connectWallet();
-                                    console.log("res", res);
-                                    if (res) toast.info("install metamask extension to connect wallet");
+                                    toast.info("Login first")
                                 }}
                                 style={{ cursor: "pointer" }}
                             >
@@ -89,7 +76,7 @@ function Navbar({ currentPage }) {
                         )}
                     </div>
 
-                    <div style={{ height: "100%", width: "auto", display: "flex", alignItems: "center", position: "relative" }}>
+                    {/* <div style={{ height: "100%", width: "auto", display: "flex", alignItems: "center", position: "relative" }}>
                         <Image src={cart} style={{ height: "30%", width: "auto" }} alt="logo" />
                         <div>
                             <span style={{ position: "absolute", top: "32%", right: "-9px", backgroundColor: "red", borderRadius: "50%", width: "20px", height: "20px", display: "flex", justifyContent: "center", alignItems: "center" }}>
@@ -97,7 +84,7 @@ function Navbar({ currentPage }) {
                                 {cartP.productCount}{" "}
                             </span>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* menu icon */}
@@ -145,9 +132,7 @@ function Navbar({ currentPage }) {
                     ) : (
                         <p
                             onClick={async () => {
-                                let res = await connectWallet();
-                                console.log("res", res);
-                                if (res) toast.info("install metamask extension to connect wallet");
+                                toast.info("Login first")
                             }}
                             style={{ cursor: "pointer" }}
                         >
